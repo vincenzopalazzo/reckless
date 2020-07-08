@@ -36,6 +36,12 @@ def make_executable(abs_path):
     """
     os.chmod(abs_path, os.stat(abs_path).st_mode | stat.S_IEXEC)
 
+def get_main_file_with_name(dir_path, file_name):
+    """
+    Returns the path to the first executable file of the provided directory
+    with the file name specified
+    """
+    return os.path.join(dir_path, file_name)
 
 def get_main_file(dir_path):
     """

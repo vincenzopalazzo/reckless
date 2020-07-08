@@ -11,7 +11,8 @@ from pyln.client import Plugin
 from search import search_github
 from utils import (
     create_dir, get_main_file, make_executable, dl_github_repo,
-    handle_requirements, handle_compilation, install_folder_from_github
+    handle_requirements, handle_compilation, install_folder_from_github,
+    get_main_file_with_name
 )
 
 
@@ -29,7 +30,7 @@ def init(plugin, options, configuration):
 
 @plugin.method("install_plugin", desc=install_description,
                long_desc=install_long_description)
-def install(plugin, url, install_auto=None, install_dir=None):
+def install(plugin, url, install_auto=None, install_dir=None, file_name=None):
     """
     Installs a plugin to the default plugins directory given an url.
     Could have been named 'my_little_dirty_function'.
@@ -102,8 +103,12 @@ def install(plugin, url, install_auto=None, install_dir=None):
     # The case where the plugin is not written in a scripting language
     handle_compilation(install_path)
 
-    # Finally get the executable file and make `lightningd` start it
-    main_file = get_main_file(install_path)
+     # Finally get the executable file and make `lightningd` start it
+    if file_name is None:
+        main_file = get_main_file(install_path)
+    else:
+        main_file = get_main_file_with_name(install_path, file_name)
+
     if main_file is not None:
         reply["response"] += "Made {} executable\n".format(main_file)
     else:
